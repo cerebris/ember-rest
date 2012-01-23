@@ -35,7 +35,7 @@ Define the following properties for your models:
 
  * `name` -- the name used to contain the serialized data in this object's JSON representation
  * `properties` -- an array of property names to be returned in this object's JSON representation
- * `url` -- (optional) the base url of the resource (e.g. '/contacts/active'); will default to the `url` for `type`
+ * `url` -- the base url of the resource (e.g. '/contacts'); will append '/id' for individual resources
 
 You may wish to override / define the following methods:
 
