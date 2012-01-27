@@ -6,6 +6,10 @@ A *very* simple library for RESTful resources in Ember.js.
 
 Ember.js and jQuery.js
 
+## Sample app
+
+https://github.com/dgeb/ember_rest_example
+
 ## Usage
 
 ### Ember.Resource
@@ -33,9 +37,11 @@ App.Contact  = Ember.Resource.extend({
 
 Define the following properties for your models:
 
- * `name` -- the name used to contain the serialized data in this object's JSON representation
- * `properties` -- an array of property names to be returned in this object's JSON representation
  * `url` -- the base url of the resource (e.g. '/contacts'); will append '/id' for individual resources
+ * `name` -- the name used to contain the serialized data in this object's JSON representation (required only for serialization)
+ * `properties` -- an array of property names to be returned in this object's JSON representation (required only for serialization)
+
+Note that because `name` and `properties` are only used for serialization, they aren't required for read-only resources.
 
 You may wish to override / define the following methods:
 
@@ -53,9 +59,11 @@ The following CRUD methods are available on resources:
 Here's an example of creating a new resource with `save()`:
 
 ```
-  submitForm: function() {
+  submit: function(event) {
     var self = this;
     var contact = this.get("contact");
+
+    event.preventDefault();
 
     contact.save()
       .fail( function(e) {
@@ -71,9 +79,11 @@ Here's an example of creating a new resource with `save()`:
 Here's an almost identical example of updating an existing resource with `save()`:
 
 ```
-  submitForm: function() {
+  submit: function(event) {
     var self = this;
     var contact = this.get("contact");
+
+    event.preventDefault();
 
     contact.save()
       .fail( function(e) {
@@ -124,10 +134,6 @@ The following methods are available:
 ## Tests
 
 Coming soon...
-
-## Sample app
-
-https://github.com/dgeb/ember_rest_example
 
 ## License
 
