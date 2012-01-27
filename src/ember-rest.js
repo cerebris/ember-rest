@@ -121,12 +121,11 @@ Ember.Resource = Ember.Object.extend({
       url: this._url(),
       data: this.serialize(),
       dataType: 'json',
-      type: (isNew ? 'POST' : 'PUT'),
-      success: function(json) {
-        // Update properties
-        if (json)
-          self.deserialize(json);
-      }
+      type: (isNew ? 'POST' : 'PUT')
+    }).done( function(json) {
+      // Update properties
+      if (json)
+        self.deserialize(json);
     });
   },
 
@@ -199,11 +198,10 @@ Ember.ResourceController = Ember.ArrayController.extend({
     return jQuery.ajax({
       url: this._url(),
       dataType: 'json',
-      type: 'GET',
-      success: function(json) {
-        self.set("content", []);
-        self.loadAll(json);
-      }
+      type: 'GET'
+    }).done( function(json) {
+      self.set("content", []);
+      self.loadAll(json);
     });
   },
 
