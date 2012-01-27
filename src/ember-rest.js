@@ -14,12 +14,15 @@
 
   Extend this class and define the following properties:
 
+  * `url` -- the base url of the resource (e.g. '/contacts'); will append '/id'
+       for individual resources (required)
   * `name` -- the name used to contain the serialized data in this object's JSON
-       representation
+       representation (required only for serialization)
   * `properties` -- an array of property names to be returned in this object's
-       JSON representation
-  * `url` -- the base url of the resource (e.g. '/contacts'); will append '/id' 
-       for individual resources
+       JSON representation (required only for serialization)
+
+  Because `name` and `properties` are only used for serialization, they aren't
+  required for read-only resources.
 
   You may also wish to override / define the following methods:
 
@@ -30,12 +33,12 @@
   * `validate()`
 */
 Ember.Resource = Ember.Object.extend({
-  name:       Ember.required(),
-  properties: Ember.required(),
   url:        Ember.required(),
 
   /**
     Duplicate every property from another resource
+
+    REQUIRED: `this.properties` (see note above)
   */
   duplicateProperties: function(source) {
     var prop;
@@ -49,6 +52,8 @@ Ember.Resource = Ember.Object.extend({
     Generate this resource's JSON representation
 
     Override this or `serializeProperty` to provide custom serialization
+
+    REQUIRED: `this.properties` and `this.name` (see note above)
   */
   serialize: function() {
     var ret = {},
@@ -101,6 +106,8 @@ Ember.Resource = Ember.Object.extend({
 
     If successful, updates this record's id and other properties
     by calling `deserialize()` with the data returned.
+
+    REQUIRED: `this.properties` and `this.name` (see note above)
   */
   save: function() {
     var self = this,
