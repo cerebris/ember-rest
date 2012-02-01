@@ -38,12 +38,13 @@ Ember.Resource = Ember.Object.extend({
   /**
     Duplicate every property from another resource
 
-    REQUIRED: `this.properties` (see note above)
+    REQUIRED: `properties` (see note above)
   */
   duplicateProperties: function(source) {
-    var prop;
-    for(var i = 0; i < this.properties.length; i++) {
-      prop = this.properties[i];
+    var props = this.constructor.prototype.properties,
+        prop;
+    for(var i = 0; i < props.length; i++) {
+      prop = props[i];
       this.set(prop, source.get(prop));
     }
   },
@@ -53,16 +54,18 @@ Ember.Resource = Ember.Object.extend({
 
     Override this or `serializeProperty` to provide custom serialization
 
-    REQUIRED: `this.properties` and `this.name` (see note above)
+    REQUIRED: `properties` and `name` (see note above)
   */
   serialize: function() {
-    var ret = {},
-        prop;
+    var name = this.constructor.prototype.name,
+        props = this.constructor.prototype.properties,
+        prop,
+        ret = {};
 
-    ret[this.name] = {};
-    for(var i = 0; i < this.properties.length; i++) {
-      prop = this.properties[i];
-      ret[this.name][prop] = this.serializeProperty(prop);
+    ret[name] = {};
+    for(var i = 0; i < props.length; i++) {
+      prop = props[i];
+      ret[name][prop] = this.serializeProperty(prop);
     }
     return ret;
   },
@@ -107,7 +110,7 @@ Ember.Resource = Ember.Object.extend({
     If successful, updates this record's id and other properties
     by calling `deserialize()` with the data returned.
 
-    REQUIRED: `this.properties` and `this.name` (see note above)
+    REQUIRED: `properties` and `name` (see note above)
   */
   save: function() {
     var self = this,
@@ -156,7 +159,7 @@ Ember.Resource = Ember.Object.extend({
     undefined for new resources).
   */
   _url: function() {
-    var url = this.url,
+    var url = this.constructor.prototype.url,
         id = this.get('id');
 
     if (id !== undefined)
