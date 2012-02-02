@@ -181,7 +181,6 @@ Ember.Resource = Ember.Object.extend({
 */
 Ember.ResourceController = Ember.ArrayController.extend({
   type:     Ember.required(),
-  content:  null,
 
   /**
     @private
