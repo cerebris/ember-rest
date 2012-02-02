@@ -181,7 +181,15 @@ Ember.Resource = Ember.Object.extend({
 */
 Ember.ResourceController = Ember.ArrayController.extend({
   type:     Ember.required(),
-  content:  [],
+  content:  null,
+
+  /**
+    @private
+  */
+  init: function() {
+    this._super();
+    this.set('content', []);
+  },
 
   /**
     Create and load a single `Ember.Resource` from JSON
