@@ -14,15 +14,15 @@
 
   Extend this class and define the following properties:
 
-  * `url` -- the base url of the resource (e.g. '/contacts'); will append '/id'
-       for individual resources (required)
-  * `name` -- the name used to contain the serialized data in this object's JSON
-       representation (required only for serialization)
-  * `properties` -- an array of property names to be returned in this object's
-       JSON representation (required only for serialization)
+  * `resourceUrl` -- the base url of the resource (e.g. '/contacts');
+       will append '/id' for individual resources (required)
+  * `resourceName` -- the name used to contain the serialized data in this
+       object's JSON representation (required only for serialization)
+  * `resourceProperties` -- an array of property names to be returned in this
+       object's JSON representation (required only for serialization)
 
-  Because `name` and `properties` are only used for serialization, they aren't
-  required for read-only resources.
+  Because `resourceName` and `resourceProperties` are only used for
+    serialization, they aren't required for read-only resources.
 
   You may also wish to override / define the following methods:
 
@@ -33,16 +33,20 @@
   * `validate()`
 */
 Ember.Resource = Ember.Object.extend({
-  url:        Ember.required(),
+  resourceUrl: Ember.required(),
 
   /**
-    Duplicate every property from another resource
+    Duplicate properties from another resource
 
-    REQUIRED: `properties` (see note above)
+    * `source` -- an Ember.Resource object
+    * `props` -- the array of properties to be duplicated;
+         defaults to `resourceProperties`
   */
-  duplicateProperties: function(source) {
-    var props = this.constructor.prototype.properties,
-        prop;
+  duplicateProperties: function(source, props) {
+    var prop;
+
+    if (props === undefined) props = this.resourceProperties;
+
     for(var i = 0; i < props.length; i++) {
       prop = props[i];
       this.set(prop, source.get(prop));
@@ -54,11 +58,11 @@ Ember.Resource = Ember.Object.extend({
 
     Override this or `serializeProperty` to provide custom serialization
 
-    REQUIRED: `properties` and `name` (see note above)
+    REQUIRED: `resourceProperties` and `resourceName` (see note above)
   */
   serialize: function() {
-    var name = this.constructor.prototype.name,
-        props = this.constructor.prototype.properties,
+    var name = this.resourceName,
+        props = this.resourceProperties,
         prop,
         ret = {};
 
@@ -112,7 +116,7 @@ Ember.Resource = Ember.Object.extend({
 
     REQUIRED: `properties` and `name` (see note above)
   */
-  save: function() {
+  saveResource: function() {
     var self = this,
         isNew = (this.get('id') === undefined);
 
@@ -128,7 +132,7 @@ Ember.Resource = Ember.Object.extend({
     }
 
     return jQuery.ajax({
-      url: this._url(),
+      url: this._resourceUrl(),
       data: this.serialize(),
       dataType: 'json',
       type: (isNew ? 'POST' : 'PUT')
@@ -142,11 +146,11 @@ Ember.Resource = Ember.Object.extend({
   /**
     Delete resource via ajax
   */
-  destroy: function() {
+  destroyResource: function() {
     var self = this;
 
     return jQuery.ajax({
-      url: this._url(),
+      url: this._resourceUrl(),
       dataType: 'json',
       type: 'DELETE'
     });
@@ -155,11 +159,11 @@ Ember.Resource = Ember.Object.extend({
   /**
     @private
 
-    The URL for this resource, based on `url` and `id` (which will be
-    undefined for new resources).
+    The URL for this resource, based on `resourceUrl` and `id` (which will be
+      undefined for new resources).
   */
-  _url: function() {
-    var url = this.constructor.prototype.url,
+  _resourceUrl: function() {
+    var url = this.resourceUrl,
         id = this.get('id');
 
     if (id !== undefined)
@@ -174,13 +178,13 @@ Ember.Resource = Ember.Object.extend({
 
   Extend this class and define the following:
 
-  * `type` -- an Ember.Resource class; the class must have a `serialize` method that
-       returns a JSON representation of the object
-  * `url` -- (optional) the base url of the resource (e.g. '/contacts/active');
-       will default to the `url` for `type`
+  * `resourceType` -- an Ember.Resource class; the class must have a `serialize()` method
+       that returns a JSON representation of the object
+  * `resourceUrl` -- (optional) the base url of the resource (e.g. '/contacts/active');
+       will default to the `resourceUrl` for `resourceType`
 */
 Ember.ResourceController = Ember.ArrayController.extend({
-  type:     Ember.required(),
+  resourceType: Ember.required(),
 
   /**
     @private
@@ -194,7 +198,7 @@ Ember.ResourceController = Ember.ArrayController.extend({
     Create and load a single `Ember.Resource` from JSON
   */
   load: function(json) {
-    var resource = this.get('type').create().deserialize(json);
+    var resource = this.get('resourceType').create().deserialize(json);
     this.pushObject(resource);
   },
 
@@ -213,7 +217,7 @@ Ember.ResourceController = Ember.ArrayController.extend({
     var self = this;
 
     return jQuery.ajax({
-      url: this._url(),
+      url: this._resourceUrl(),
       dataType: 'json',
       type: 'GET'
     }).done( function(json) {
@@ -227,13 +231,13 @@ Ember.ResourceController = Ember.ArrayController.extend({
 
     Base URL for ajax calls
 
-    Will use the `url` set for this controller, or if that's missing,
-    the `url` specified for `type`.
+    Will use the `resourceUrl` set for this controller, or if that's missing,
+    the `resourceUrl` specified for `resourceType`.
   */
-  _url: function() {
-    if (this.url === undefined)
-      return this.get('type').prototype.url;
+  _resourceUrl: function() {
+    if (this.resourceUrl === undefined)
+      return this.get('resourceType').prototype.resourceUrl;
     else
-      return this.url;
+      return this.resourceUrl;
   }
 });

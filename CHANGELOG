@@ -1,0 +1,11 @@
+*February 2, 2012*
+
+* BREAKING: Ember.Resource: renamed url -> resourceUrl
+* BREAKING: Ember.Resource: renamed name -> resourceName
+* BREAKING: Ember.Resource: renamed properties -> resourceProperties
+* BREAKING: Ember.Resource: renamed save() -> saveResource()
+* BREAKING: Ember.Resource: renamed destroy() -> destroyResource()
+* BREAKING: Ember.ResourceController: renamed type -> resourceType
+* BREAKING: Ember.ResourceController: renamed url -> resourceUrl
+* Ember.Resource: allow a specific array of props to be passed to duplicateProperties(); defaults to resourceProperties
+* Ember.ResourceController: fixed initialization of content
