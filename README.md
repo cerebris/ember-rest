@@ -1,4 +1,4 @@
-# Ember-REST
+# Ember-REST  [![Build Status](https://secure.travis-ci.org/cerebris/ember-rest.png)](http://travis-ci.org/cerebris/ember-rest)
 
 A *very* simple library for RESTful resources in Ember.js.
 
