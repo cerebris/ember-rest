@@ -1,3 +1,8 @@
+*February 27, 2012*
+
+* Ember.Resource: added findResource()
+* Ember.ResourceController: added clearAll()
+
 *February 2, 2012*
 
 * BREAKING: Ember.Resource: renamed url -> resourceUrl

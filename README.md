@@ -60,9 +60,25 @@ You may wish to override / define the following methods:
 
 The following CRUD methods are available on resources:
 
+ * `findResource()` - loads a resource
  * `saveResource()` - create a new resource or update an existing one
  * `destroyResource()` - delete an existing resource
- 
+
+Here's an example of loading a single resource with `findResource()`:
+
+```
+  var contact = Contact.create({id: 1});
+
+  contact.findResource()
+    .fail( function(e) {
+      App.displayError(e);
+    })
+    .done(function() {
+      alert("Loaded!");
+    });
+```
+
+
 Here's an example of creating a new resource with `saveResource()`:
 
 ```
@@ -137,6 +153,7 @@ The following methods are available:
  * `load(json)` -- create and load a single `Ember.Resource` from JSON
  * `loadAll(json)` -- create and load `Ember.Resource` objects from a JSON array
  * `findAll()` -- replace `contents` with an ajax call to `resourceUrl`
+ * `clearAll()` -- clear `contents` (without deleting resources)
 
 ## License
 
