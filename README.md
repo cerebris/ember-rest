@@ -5,10 +5,6 @@ A *very* simple library for RESTful resources in Ember.js.
 This was extracted from a simple example app:
 https://github.com/dgeb/ember_rest_example
 
-Sorry for the lack of tests. I'll write some soon.
-
-Please file issues on Github. Pull requests are welcome too.
-
 ## Requirements
 
 Ember.js and jQuery.js
@@ -154,6 +150,14 @@ The following methods are available:
  * `loadAll(json)` -- create and load `Ember.Resource` objects from a JSON array
  * `findAll()` -- replace `contents` with an ajax call to `resourceUrl`
  * `clearAll()` -- clear `contents` (without deleting resources)
+
+## Tests
+
+QUnit and Sinon are used for tests. Simply open `tests/index.html` in your browser to run all the tests. No local server required.
+
+## Contributions
+
+Please file issues on Github. Pull requests are welcome too.
 
 ## License
 
