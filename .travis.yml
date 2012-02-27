@@ -3,5 +3,6 @@ python:
 before_script:
   - "export DISPLAY=:99.0"
   - "sh -e /etc/init.d/xvfb start"
-  - "python -m SimpleHTTPServer"
+  - python -m SimpleHTTPServer &
+  - sleep 5
 script: phantomjs tests/lib/run-qunit.js "http://localhost:8000/tests/index.html"
