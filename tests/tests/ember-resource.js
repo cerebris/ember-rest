@@ -45,6 +45,14 @@ test("should determine a resourceUrl based upon id", function() {
   equal(contact._resourceUrl(), "/contacts/1");
 });
 
+test("should interpret whether resource is new based upon id", function() {
+  var contact = Contact.create({id: 1});
+  equal(contact.isNew(), false);
+
+  var newContact = Contact.create();
+  equal(newContact.isNew(), true);
+});
+
 test("should find a resource via ajax", function() {
   server.respondWith("GET", "/contacts/1",
                      [200,

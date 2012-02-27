@@ -1,5 +1,8 @@
 *February 27, 2012*
 
+* Added full test suite
+* Ember.Resource: added isNew()
+* Ember.Resource: added _id()
 * Ember.Resource: added findResource()
 * Ember.ResourceController: added clearAll()
 

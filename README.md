@@ -53,6 +53,7 @@ You may wish to override / define the following methods:
  * `deserialize(json)`
  * `deserializeProperty(prop, value)`
  * `validate()` - parse values and return an error string or object if appropriate
+ * `isNew()` - determines whether this a new resource based on the presence of its `id`
 
 The following CRUD methods are available on resources:
 

@@ -134,8 +134,7 @@ Ember.Resource = Ember.Object.extend({
     REQUIRED: `properties` and `name` (see note above)
   */
   saveResource: function() {
-    var self = this,
-        isNew = (this.get('id') === undefined);
+    var self = this;
 
     if (this.validate !== undefined) {
       var error = this.validate();
@@ -152,7 +151,7 @@ Ember.Resource = Ember.Object.extend({
       url: this._resourceUrl(),
       data: this.serialize(),
       dataType: 'json',
-      type: (isNew ? 'POST' : 'PUT')
+      type: (this.isNew() ? 'POST' : 'PUT')
     }).done( function(json) {
       // Update properties
       if (json)
@@ -172,6 +171,13 @@ Ember.Resource = Ember.Object.extend({
   },
 
   /**
+   Is this a new resource?
+  */
+  isNew: function() {
+    return (this._id() === undefined);
+  },
+
+  /**
     @private
 
     The URL for this resource, based on `resourceUrl` and `id` (which will be
@@ -179,12 +185,21 @@ Ember.Resource = Ember.Object.extend({
   */
   _resourceUrl: function() {
     var url = this.resourceUrl,
-        id = this.get('id');
+        id = this._id();
 
     if (id !== undefined)
       url += '/' + id;
 
     return url;
+  },
+
+  /**
+    @private
+
+    The id for this resource.
+  */
+  _id: function() {
+    return this.get('id');
   }
 });
 
