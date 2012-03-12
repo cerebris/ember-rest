@@ -40,7 +40,8 @@ App.Contact  = Ember.Resource.extend({
 
 Define the following properties for your models:
 
- * `resourceUrl` -- the base url of the resource (e.g. '/contacts'); will append '/id' for individual resources
+ * `resourceIdField` -- the id field for this resource ('id' by default)
+ * `resourceUrl` -- the base url of the resource (e.g. '/contacts'); will append '/' + id for individual resources
  * `resourceName` -- the name used to contain the serialized data in this object's JSON representation (required only for serialization)
  * `resourceProperties` -- an array of property names to be returned in this object's JSON representation (required only for serialization)
 

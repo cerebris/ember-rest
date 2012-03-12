@@ -14,8 +14,9 @@
 
   Extend this class and define the following properties:
 
+  * `resourceIdField` -- the id field for this resource ('id' by default)
   * `resourceUrl` -- the base url of the resource (e.g. '/contacts');
-       will append '/id' for individual resources (required)
+       will append '/' + id for individual resources (required)
   * `resourceName` -- the name used to contain the serialized data in this
        object's JSON representation (required only for serialization)
   * `resourceProperties` -- an array of property names to be returned in this
@@ -33,7 +34,8 @@
   * `validate()`
 */
 Ember.Resource = Ember.Object.extend({
-  resourceUrl: Ember.required(),
+  resourceIdField: 'id',
+  resourceUrl:     Ember.required(),
 
   /**
     Duplicate properties from another resource
@@ -174,18 +176,18 @@ Ember.Resource = Ember.Object.extend({
    Is this a new resource?
   */
   isNew: function() {
-    return (this._id() === undefined);
+    return (this._resourceId() === undefined);
   },
 
   /**
     @private
 
-    The URL for this resource, based on `resourceUrl` and `id` (which will be
+    The URL for this resource, based on `resourceUrl` and `_resourceId()` (which will be
       undefined for new resources).
   */
   _resourceUrl: function() {
     var url = this.resourceUrl,
-        id = this._id();
+        id = this._resourceId();
 
     if (id !== undefined)
       url += '/' + id;
@@ -198,8 +200,8 @@ Ember.Resource = Ember.Object.extend({
 
     The id for this resource.
   */
-  _id: function() {
-    return this.get('id');
+  _resourceId: function() {
+    return this.get(this.resourceIdField);
   }
 });
 

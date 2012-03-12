@@ -53,6 +53,17 @@ test("should interpret whether resource is new based upon id", function() {
   equal(newContact.isNew(), true);
 });
 
+test("using a custom id field, should interpret whether resource is new based upon id", function() {
+  var MongoContact = Contact.extend({resourceIdField: '_id'});
+
+  var contact = MongoContact.create({_id: 1});
+  equal(contact.isNew(), false);
+  equal(contact._resourceId(), 1);
+
+  var newContact = MongoContact.create();
+  equal(newContact.isNew(), true);
+});
+
 test("should find a resource via ajax", function() {
   server.respondWith("GET", "/contacts/1",
                      [200,
