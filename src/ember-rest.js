@@ -36,6 +36,7 @@
 Ember.Resource = Ember.Object.extend({
   resourceIdField: 'id',
   resourceUrl:     Ember.required(),
+  oauthToken: false,
 
   /**
     Duplicate properties from another resource
@@ -116,11 +117,7 @@ Ember.Resource = Ember.Object.extend({
   findResource: function() {
     var self = this;
 
-    return jQuery.ajax({
-      url: this._resourceUrl(),
-      dataType: 'json',
-      type: 'GET'
-    }).done( function(json) {
+    return this._prepareRequest('GET').done( function(json) {
       self.deserialize(json);
     });
   },
@@ -149,12 +146,7 @@ Ember.Resource = Ember.Object.extend({
       }
     }
 
-    return jQuery.ajax({
-      url: this._resourceUrl(),
-      data: this.serialize(),
-      dataType: 'json',
-      type: (this.isNew() ? 'POST' : 'PUT')
-    }).done( function(json) {
+    return this._prepareRequest(this.isNew() ? 'POST' : 'PUT', this.serialize()).done( function(json) {
       // Update properties
       if (json)
         self.deserialize(json);
@@ -165,11 +157,7 @@ Ember.Resource = Ember.Object.extend({
     Delete resource via ajax
   */
   destroyResource: function() {
-    return jQuery.ajax({
-      url: this._resourceUrl(),
-      dataType: 'json',
-      type: 'DELETE'
-    });
+      return this._prepareRequest('DELETE');
   },
 
   /**
@@ -202,6 +190,30 @@ Ember.Resource = Ember.Object.extend({
   */
   _resourceId: function() {
     return this.get(this.resourceIdField);
+  },
+
+  /**
+    @private
+    Prepare XHR Request
+  */
+  _prepareRequest: function(type, data) {
+      var params = {
+      url: this._resourceUrl(),
+      dataType: 'json',
+      type: type
+    }
+
+    if (data) {
+        params.data = data;
+    }
+
+    if (this.oauthToken) {
+        params.beforeSend = function (xhr, settings) {
+          xhr.withCredentials = true;
+          xhr.setRequestHeader('Authorization', 'Bearer ' + this.oauthToken);
+      }
+    }
+    return jQuery.ajax(params);
   }
 });
 
@@ -264,7 +276,6 @@ Ember.ResourceController = Ember.ArrayController.extend({
       self.loadAll(json);
     });
   },
-
   /**
     @private
 
