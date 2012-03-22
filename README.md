@@ -76,7 +76,6 @@ Here's an example of loading a single resource with `findResource()`:
     });
 ```
 
-
 Here's an example of creating a new resource with `saveResource()`:
 
 ```
@@ -152,6 +151,36 @@ The following methods are available:
  * `loadAll(json)` -- create and load `Ember.Resource` objects from a JSON array
  * `findAll()` -- replace `contents` with an ajax call to `resourceUrl`
  * `clearAll()` -- clear `contents` (without deleting resources)
+
+### Ember.ResourceAdapter
+
+Ember.ResourceAdapter is mixed in to both Ember.Resource and Ember.ResourceController to perform resource requests. The default implementation is a thin wrapper around jQuery.ajax().
+
+If you would like to completely override Ember.ResourceAdapter, define your own version before including ember-rest.js. For example:
+
+```
+  Ember.ResourceAdapter = Ember.Mixin.create({
+    _resourceRequest: function(params) {
+      // TODO - your implementation here
+    }
+  });
+```
+
+If you would just like to modify the behavior of Ember.ResourceAdapter, just reopen it. A `_prepareResourceRequest()` hook has been provided to allow modifications to the params passed to `jQuery.ajax()`.
+
+Here's an example that adds oauth support (note: this is not completely generalized - it depends on `MyApp.oauthToken`):
+
+```
+  Ember.ResourceAdapter.reopen({
+    _prepareResourceRequest: function(params) {
+      params.beforeSend = function (xhr, settings) {
+        xhr.withCredentials = true;
+        xhr.setRequestHeader('Authorization', 'Bearer ' + MyApp.oauthToken);
+      }
+    }
+  });
+```
+
 
 ## Tests
 
