@@ -36,7 +36,6 @@
 Ember.Resource = Ember.Object.extend({
   resourceIdField: 'id',
   resourceUrl:     Ember.required(),
-  oauthToken: false,
 
   /**
     Duplicate properties from another resource
@@ -117,7 +116,7 @@ Ember.Resource = Ember.Object.extend({
   findResource: function() {
     var self = this;
 
-    return this._prepareRequest('GET').done( function(json) {
+    return this._prepareRequest({type: 'GET'}).done(function(json) {
       self.deserialize(json);
     });
   },
@@ -146,10 +145,9 @@ Ember.Resource = Ember.Object.extend({
       }
     }
 
-    return this._prepareRequest(this.isNew() ? 'POST' : 'PUT', this.serialize()).done( function(json) {
+    return this._prepareRequest({type: this.isNew() ? 'POST' : 'PUT', data: this.serialize()}).done(function(json) {
       // Update properties
-      if (json)
-        self.deserialize(json);
+      if (json) self.deserialize(json);
     });
   },
 
@@ -157,7 +155,7 @@ Ember.Resource = Ember.Object.extend({
     Delete resource via ajax
   */
   destroyResource: function() {
-      return this._prepareRequest('DELETE');
+      return this._prepareRequest({type: 'DELETE'});
   },
 
   /**
@@ -194,27 +192,21 @@ Ember.Resource = Ember.Object.extend({
 
   /**
     @private
+    XHR Request params
+  */
+  _requestParams: function(params) {
+    params.url = this._resourceUrl();
+    params.dataType = 'json';
+
+    return params;
+  },
+
+  /**
+    @private
     Prepare XHR Request
   */
-  _prepareRequest: function(type, data) {
-      var params = {
-      url: this._resourceUrl(),
-      dataType: 'json',
-      type: type
-    }
-
-    if (data) {
-        params.data = data;
-    }
-
-    if (this.oauthToken) {
-        self = this;
-        params.beforeSend = function (xhr, settings) {
-          xhr.withCredentials = true;
-          xhr.setRequestHeader('Authorization', 'Bearer ' + self.oauthToken);
-      }
-    }
-    return jQuery.ajax(params);
+  _prepareRequest: function(params) {
+      return jQuery.ajax(this._requestParams(params));
   }
 });
 
@@ -268,11 +260,7 @@ Ember.ResourceController = Ember.ArrayController.extend({
   findAll: function() {
     var self = this;
 
-    return jQuery.ajax({
-      url: this._resourceUrl(),
-      dataType: 'json',
-      type: 'GET'
-    }).done( function(json) {
+    return this._requestParams({type: 'GET'}).done(function(json) {
       self.clearAll();
       self.loadAll(json);
     });
@@ -290,5 +278,24 @@ Ember.ResourceController = Ember.ArrayController.extend({
       return this.get('resourceType').prototype.resourceUrl;
     else
       return this.resourceUrl;
+  },
+
+  /**
+    @private
+    XHR Request params
+  */
+  _requestParams: function(params) {
+    params.url = this._resourceUrl();
+    params.dataType = 'json';
+
+    return params;
+  },
+
+  /**
+    @private
+    Prepare XHR Request
+  */
+  _prepareRequest: function(params) {
+      return jQuery.ajax(this._requestParams(params));
   }
 });
