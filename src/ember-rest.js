@@ -208,9 +208,10 @@ Ember.Resource = Ember.Object.extend({
     }
 
     if (this.oauthToken) {
+        self = this;
         params.beforeSend = function (xhr, settings) {
           xhr.withCredentials = true;
-          xhr.setRequestHeader('Authorization', 'Bearer ' + this.oauthToken);
+          xhr.setRequestHeader('Authorization', 'Bearer ' + self.oauthToken);
       }
     }
     return jQuery.ajax(params);
