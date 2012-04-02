@@ -1,5 +1,5 @@
 /**
- Ember-REST.js
+ Ember-REST.js 0.1.0
 
  A simple library for RESTful resources in Ember.js
 
