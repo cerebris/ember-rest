@@ -1,8 +1,10 @@
 *Ember-REST 0.1.0 (April 2, 2012)*
+
 * Added versioning to Ember-REST
 * Verified compatibility with Ember 0.9.6
 
 *March 22, 2012*
+
 * Introduced Ember.ResourceAdapter
 
 *March 12, 2012*
