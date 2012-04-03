@@ -1,6 +1,7 @@
 *Ember-REST 0.1.1 (April 2, 2012)*
 
-* ResourceController._resourceUrl() can now extract a resourceUrl from a Resource that hasn't been instantiated
+* Ember.ResourceController._resourceUrl() can now extract a resourceUrl from an Ember.Resource that hasn't been instantiated
+* Ember.Resource: added copy() as well as Ember.Copyable mixin
 
 *Ember-REST 0.1.0 (April 2, 2012)*
 

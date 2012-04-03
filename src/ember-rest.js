@@ -65,7 +65,7 @@ if (Ember.ResourceAdapter === undefined) {
   * `deserializeProperty(prop, value)`
   * `validate()`
 */
-Ember.Resource = Ember.Object.extend({
+Ember.Resource = Ember.Object.extend(Ember.ResourceAdapter, Ember.Copyable, {
   resourceIdField: 'id',
   resourceUrl:     Ember.required(),
 
@@ -85,6 +85,20 @@ Ember.Resource = Ember.Object.extend({
       prop = props[i];
       this.set(prop, source.get(prop));
     }
+  },
+
+  /**
+    Create a copy of this resource
+
+    Needed to implement Ember.Copyable
+
+    REQUIRED: `resourceProperties`
+  */
+  copy: function(deep) {
+    var c = this.constructor.create();
+    c.duplicateProperties(this);
+    c.set(this.resourceIdField, this.get(this.resourceIdField));
+    return c;
   },
 
   /**
@@ -224,7 +238,7 @@ Ember.Resource = Ember.Object.extend({
   _resourceId: function() {
     return this.get(this.resourceIdField);
   }
-}, Ember.ResourceAdapter);
+});
 
 /**
   A controller for RESTful resources
@@ -236,7 +250,7 @@ Ember.Resource = Ember.Object.extend({
   * `resourceUrl` -- (optional) the base url of the resource (e.g. '/contacts/active');
        will default to the `resourceUrl` for `resourceType`
 */
-Ember.ResourceController = Ember.ArrayController.extend({
+Ember.ResourceController = Ember.ArrayController.extend(Ember.ResourceAdapter, {
   resourceType: Ember.required(),
 
   /**
@@ -312,4 +326,4 @@ Ember.ResourceController = Ember.ArrayController.extend({
     }
     return this.resourceUrl;
   }
-}, Ember.ResourceAdapter);
+});

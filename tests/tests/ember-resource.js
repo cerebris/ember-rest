@@ -10,6 +10,17 @@ module("Ember.Resource", {
   }
 });
 
+test("should be copyable", function() {
+  var props = {id: 1, first_name: "Joe", last_name: "Blow"};
+
+  var contact = Contact.create(props);
+  var copy = contact.copy();
+
+  equal(copy.get("id"),         contact.get("id"),         "id matches");
+  equal(copy.get("first_name"), contact.get("first_name"), "first_name matches");
+  equal(copy.get("last_name"),  contact.get("last_name"),  "last_name matches");
+});
+
 test("should serialize its properties to JSON", function() {
   var props = {id: 1, first_name: "Joe", last_name: "Blow"};
 
