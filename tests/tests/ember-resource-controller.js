@@ -20,6 +20,11 @@ test("should use the resourceUrl from its corresponding resource", function() {
   equal(contactsController._resourceUrl(), "/contacts");
 });
 
+test("should use the resourceUrl from a corresponding resource which has not yet been instantiated", function() {
+  contactsController.set("resourceType", Ember.Resource.extend({resourceUrl: '/people'}));
+  equal(contactsController._resourceUrl(), "/people");
+});
+
 test("should be able to override resourceUrl", function() {
   contactsController.set("resourceUrl", "/contacts/active");
   equal(contactsController._resourceUrl(), "/contacts/active");

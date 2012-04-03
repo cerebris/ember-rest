@@ -1,5 +1,5 @@
 /**
- Ember-REST.js 0.1.0
+ Ember-REST.js 0.1.1
 
  A simple library for RESTful resources in Ember.js
 
@@ -292,9 +292,24 @@ Ember.ResourceController = Ember.ArrayController.extend({
     the `resourceUrl` specified for `resourceType`.
   */
   _resourceUrl: function() {
-    if (this.resourceUrl === undefined)
-      return this.get('resourceType').prototype.resourceUrl;
-    else
-      return this.resourceUrl;
+    if (this.resourceUrl === undefined) {
+      // If `resourceUrl` is not defined for this controller, there are a couple
+      // ways to retrieve it from the resource. If a resource has been instantiated,
+      // then it can be retrieved from the resource's prototype. Otherwise, we need
+      // to loop through the mixins for the prototype to get the resourceUrl.
+      var rt = this.get('resourceType');
+      if (rt.prototype.resourceUrl === undefined) {
+        for (var i = rt.PrototypeMixin.mixins.length - 1; i >= 0; i--) {
+          var m = rt.PrototypeMixin.mixins[i];
+          if (m.properties !== undefined && m.properties.resourceUrl !== undefined) {
+            return m.properties.resourceUrl;
+          }
+        }
+      }
+      else {
+        return rt.prototype.resourceUrl;
+      }
+    }
+    return this.resourceUrl;
   }
 }, Ember.ResourceAdapter);
