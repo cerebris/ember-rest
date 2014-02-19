@@ -1,3 +1,5 @@
+** 2014-02-19 - This library is no longer supported because it is overly simplistic for most applications. Please consider using [Ember Data](https://github.com/emberjs/data) instead.**
+
 # Ember-REST  [![Build Status](https://secure.travis-ci.org/cerebris/ember-rest.png)](http://travis-ci.org/cerebris/ember-rest)
 
 A *very* simple library for RESTful resources in Ember.js.
